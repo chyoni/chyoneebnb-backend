@@ -101,3 +101,9 @@ chyonee.say_hello()
 python manage.py makemigrations
 python manage.py migrage
 ```
+
+#### #04 Superuser
+
+```bash
+python manage.py createsuperuser
+```
