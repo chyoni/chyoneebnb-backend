@@ -107,3 +107,9 @@ python manage.py migrage
 ```bash
 python manage.py createsuperuser
 ```
+
+#### #05 Apps
+
+```bash
+python manage.py startapp <app name>
+```
