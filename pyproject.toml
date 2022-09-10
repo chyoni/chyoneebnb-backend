@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "chyoneebnb-backend"
+version = "0.1.0"
+description = ""
+authors = ["최치원 <cw.choiit@choechiwon-ui-MacBookPro.local>"]
+license = "MIT"
+readme = "README.md"
+packages = [{include = "chyoneebnb_backend"}]
+
+[tool.poetry.dependencies]
+python = "^3.9"
+Django = "^4.1.1"
+
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
