@@ -110,6 +110,9 @@ python manage.py createsuperuser
 
 #### #05 Apps
 
+- 앱을 딱 만들기 시작하면 그 앱을 장고에 세팅하고 Model을 작성하는 방법을 묘사
+- Houses App
+
 ```bash
 python manage.py startapp <app name>
 ```
