@@ -136,3 +136,5 @@ poetry add Pillow
 ```
 
 #### #10 Room Models
+
+#### #11 Common Model for CreatedAt, UpdatedAt
