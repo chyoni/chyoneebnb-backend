@@ -6,12 +6,26 @@ from . import models
 @admin.register(models.User)
 class CustomUserAdmin(UserAdmin):
 
-    list_display = ("id", "username", "email", "is_host", "is_superuser")
+    list_display = ("id", "username", "nickname", "email", "is_host", "is_superuser")
 
     fieldsets = (
         (
             "Profile",
-            {"fields": ("username", "password", "email", "bio", "phone", "location")},
+            {
+                "fields": (
+                    "username",
+                    "nickname",
+                    "avatar",
+                    "password",
+                    "email",
+                    "bio",
+                    "phone",
+                    "location",
+                    "currency",
+                    "language",
+                    "gender",
+                )
+            },
         ),
         (
             "Permissions",

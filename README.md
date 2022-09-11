@@ -126,3 +126,11 @@ poetry add --dev black --allow-prereleases
 #### #07 User customized
 
 #### #08 Relationship Database
+
+#### #09 User Models
+
+- Pillow는 ImageField를 위해서 사용해야 하는 패키지
+
+```bash
+poetry add Pillow
+```
