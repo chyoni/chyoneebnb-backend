@@ -116,3 +116,9 @@ python manage.py createsuperuser
 ```bash
 python manage.py startapp <app name>
 ```
+
+#### #06 Black
+
+```bash
+poetry add --dev black --allow-prereleases
+```
