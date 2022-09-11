@@ -19,6 +19,7 @@ class RoomAdmin(admin.ModelAdmin):
                 "description",
                 "address",
                 "pet_friendly",
+                "category",
             )
         },
     ), ("More About the Space", {"classes": ("wide"), "fields": ("amenities",)})
