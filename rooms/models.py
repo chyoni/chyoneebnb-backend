@@ -24,7 +24,10 @@ class Room(CommonModel):
     owner = models.ForeignKey(
         "users.User", on_delete=models.CASCADE, related_name="rooms"
     )
-    amenities = models.ManyToManyField("rooms.Amenity")
+    amenities = models.ManyToManyField("rooms.Amenity", blank=True)
+
+    def __str__(self) -> str:
+        return self.name
 
 
 class Amenity(CommonModel):
@@ -33,3 +36,9 @@ class Amenity(CommonModel):
 
     name = models.CharField(max_length=150)
     description = models.CharField(max_length=150, blank=True, null=True, default="")
+
+    def __str__(self) -> str:
+        return self.name
+
+    class Meta:
+        verbose_name_plural = "Amenities"
