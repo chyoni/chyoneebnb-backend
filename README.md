@@ -122,3 +122,5 @@ python manage.py startapp <app name>
 ```bash
 poetry add --dev black --allow-prereleases
 ```
+
+#### #07 User customized
