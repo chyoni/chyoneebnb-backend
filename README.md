@@ -134,3 +134,5 @@ poetry add --dev black --allow-prereleases
 ```bash
 poetry add Pillow
 ```
+
+#### #10 Room Models
