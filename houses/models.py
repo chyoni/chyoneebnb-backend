@@ -12,3 +12,6 @@ class House(models.Model):
     pets_allowed = models.BooleanField(
         default=True, help_text="Does this house pets allowed?"
     )
+    owner = models.ForeignKey(
+        "users.User", on_delete=models.CASCADE, related_name="houses"
+    )
