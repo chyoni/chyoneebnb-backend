@@ -159,3 +159,5 @@ poetry add Pillow
 #### #20 Model method 2
 
 #### #21 Admin actions
+
+#### #22 Custom filter on Admin Panel
