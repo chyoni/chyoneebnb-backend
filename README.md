@@ -148,3 +148,5 @@ poetry add Pillow
 #### #15 Wishlist Model
 
 #### #16 Booking Model
+
+#### #17 Media Model
