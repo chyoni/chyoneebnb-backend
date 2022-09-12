@@ -5,4 +5,4 @@ from .models import Wishlist
 @admin.register(Wishlist)
 class WishlistAdmin(admin.ModelAdmin):
 
-    list_display = ("name", "user", "created_at", "updated_at")
+    list_display = ("id", "name", "user", "created_at", "updated_at")

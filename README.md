@@ -146,3 +146,5 @@ poetry add Pillow
 #### #14 Review Model
 
 #### #15 Wishlist Model
+
+#### #16 Booking Model
