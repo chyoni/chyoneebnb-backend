@@ -153,3 +153,5 @@ poetry add Pillow
 #### #17 Media Model
 
 #### #18 DM Model
+
+#### #19 Admin method, Model method

@@ -30,6 +30,7 @@ class RoomAdmin(admin.ModelAdmin):
         "country",
         "price",
         "city",
+        "total_amenities",
         "kind",
         "owner",
     )
