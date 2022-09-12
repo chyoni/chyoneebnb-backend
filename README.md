@@ -111,7 +111,8 @@ python manage.py createsuperuser
 #### #05 Apps
 
 - 앱을 딱 만들기 시작하면 그 앱을 장고에 세팅하고 Model을 작성하는 방법을 묘사
-- Houses App
+- 아래는 앱을 생성하는 command
+- 앱을 생성하면 config > settings.py 에서 APPS에 등록해줘야한다.
 
 ```bash
 python manage.py startapp <app name>
@@ -150,3 +151,5 @@ poetry add Pillow
 #### #16 Booking Model
 
 #### #17 Media Model
+
+#### #18 DM Model
