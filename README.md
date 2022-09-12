@@ -144,3 +144,5 @@ poetry add Pillow
 #### #13 Category, Experience Model
 
 #### #14 Review Model
+
+#### #15 Wishlist Model
