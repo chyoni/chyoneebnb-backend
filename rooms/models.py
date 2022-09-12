@@ -39,6 +39,15 @@ class Room(CommonModel):
     def total_amenities(self) -> int:
         return self.amenities.all().count()
 
+    def total_rating(self) -> float:
+        all_reviews = self.reviews.all()
+        total = 0
+        if len(all_reviews) == 0:
+            return 0
+        for review in all_reviews:
+            total += review.rating
+        return round(total / len(all_reviews), 1)
+
 
 class Amenity(CommonModel):
 
