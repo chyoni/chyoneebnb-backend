@@ -4,6 +4,8 @@ from .models import Review
 
 class MoreThenThreeReviewsFilter(admin.SimpleListFilter):
 
+    """Custom Filter by me. refer to -> https://docs.djangoproject.com/en/4.1/ref/contrib/admin/filters/#using-a-simplelistfilter"""
+
     title: str = "By rating"
 
     parameter_name: str = "rated"
