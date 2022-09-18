@@ -169,3 +169,5 @@ poetry add Pillow
 ```bash
 poetry add djangorestframework
 ```
+
+#### #24 Serializer of djangorestframework
