@@ -179,3 +179,5 @@ poetry add djangorestframework
 #### #27 Amenity views
 
 #### #28 Perk views
+
+#### #29 Nested Serializer
