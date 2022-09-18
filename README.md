@@ -175,3 +175,5 @@ poetry add djangorestframework
 #### #25 ModelViewSet
 
 #### #26 APIView, ModelSerializer is good
+
+#### #27 Amenity views

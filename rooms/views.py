@@ -1,6 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.exceptions import NotFound
 from .models import Amenity
 from .serializers import AmenitySerializer
 
@@ -24,11 +25,32 @@ class Amenities(APIView):
 
 
 class AmenityDetail(APIView):
+    def get_object(self, pk):
+        try:
+            return Amenity.objects.get(pk=pk)
+        except Amenity.DoesNotExist:
+            raise NotFound
+
     def get(self, request, pk):
-        pass
+        return Response(
+            AmenitySerializer(instance=self.get_object(pk)).data,
+            status=status.HTTP_200_OK,
+        )
 
     def put(self, request, pk):
-        pass
+        amenity = self.get_object(pk)
+        serializer = AmenitySerializer(
+            instance=amenity, data=request.data, partial=True
+        )
+        if serializer.is_valid():
+            updated = serializer.save()
+            return Response(
+                data=AmenitySerializer(instance=updated).data, status=status.HTTP_200_OK
+            )
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST, data=serializer.errors)
 
     def delete(self, request, pk):
-        pass
+        amenity = self.get_object(pk)
+        amenity.delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
