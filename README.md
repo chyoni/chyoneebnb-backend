@@ -161,3 +161,11 @@ poetry add Pillow
 #### #21 Admin actions
 
 #### #22 Custom filter on Admin Panel
+
+-https://docs.djangoproject.com/en/4.1/ref/contrib/admin/filters/#using-a-simplelistfilter
+
+#### #23 Django rest framework
+
+```bash
+poetry add djangorestframework
+```
