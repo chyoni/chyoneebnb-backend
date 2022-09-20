@@ -1,7 +1,7 @@
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.exceptions import NotFound
+from rest_framework.exceptions import NotFound, NotAuthenticated
 from .models import Amenity, Room
 from .serializers import AmenitySerializer, RoomListSerializer, RoomDetailSerializer
 
@@ -61,6 +61,20 @@ class Rooms(APIView):
         all_rooms = Room.objects.all()
         serializer = RoomListSerializer(instance=all_rooms, many=True)
         return Response(status=status.HTTP_200_OK, data=serializer.data)
+
+    def post(self, request):
+        if request.user.is_authenticated:
+            serializer = RoomDetailSerializer(data=request.data)
+            if serializer.is_valid():
+                new_room = serializer.save(owner=request.user)
+                serializer = RoomDetailSerializer(new_room)
+                return Response(status=status.HTTP_201_CREATED, data=serializer.data)
+            else:
+                return Response(
+                    status=status.HTTP_400_BAD_REQUEST, data=serializer.errors
+                )
+        else:
+            raise NotAuthenticated
 
 
 class RoomDetail(APIView):
