@@ -3,6 +3,7 @@ from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.exceptions import NotFound, NotAuthenticated
 from .models import Amenity, Room
+from categories.models import Category
 from .serializers import AmenitySerializer, RoomListSerializer, RoomDetailSerializer
 
 
@@ -66,7 +67,27 @@ class Rooms(APIView):
         if request.user.is_authenticated:
             serializer = RoomDetailSerializer(data=request.data)
             if serializer.is_valid():
-                new_room = serializer.save(owner=request.user)
+                category_pk = request.data.get("category")
+                if category_pk is None:
+                    return Response(
+                        status=status.HTTP_400_BAD_REQUEST,
+                        data={"error": "Category field is required"},
+                    )
+                try:
+                    category = Category.objects.get(pk=category_pk)
+                    if category.kind == Category.CategoryKindChoices.EXPERIENCES:
+                        return Response(
+                            status=status.HTTP_400_BAD_REQUEST,
+                            data={
+                                "error": "This category is only valid for experiences kind"
+                            },
+                        )
+                except Category.DoesNotExist:
+                    return Response(
+                        status=status.HTTP_400_BAD_REQUEST,
+                        data={"error": "category you given does not exist"},
+                    )
+                new_room = serializer.save(owner=request.user, category=category)
                 serializer = RoomDetailSerializer(new_room)
                 return Response(status=status.HTTP_201_CREATED, data=serializer.data)
             else:
@@ -88,3 +109,15 @@ class RoomDetail(APIView):
         room = self.get_object(pk)
         serializer = RoomDetailSerializer(instance=room)
         return Response(status=status.HTTP_200_OK, data=serializer.data)
+
+
+# {
+# "name": "Beautiful room for you",
+# "price": 3000,
+# "rooms_count": 3,
+# "toilets": 3,
+# "description": "Awesome Fucking Good",
+# "address": "Chyonee house",
+# "category": 1,
+# "kind": "entire_place"
+# }
