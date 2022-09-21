@@ -2,7 +2,6 @@ from rest_framework.serializers import ModelSerializer, SerializerMethodField
 from .models import Amenity, Room
 from users.serializers import TinyUserSerializer
 from categories.serializers import CategorySerializer
-from reviews.serializers import ReivewSerializer
 
 class AmenitySerializer(ModelSerializer):
     class Meta:
@@ -16,7 +15,6 @@ class RoomDetailSerializer(ModelSerializer):
     amenities = AmenitySerializer(read_only=True, many=True)
     category = CategorySerializer(read_only=True)
     rating = SerializerMethodField()
-    reviews = ReivewSerializer(read_only=True, many=True)
 
     class Meta:
         model = Room

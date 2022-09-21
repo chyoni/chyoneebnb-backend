@@ -6,7 +6,7 @@ from rest_framework.exceptions import NotFound, NotAuthenticated, ParseError
 from .models import Amenity, Room
 from categories.models import Category
 from .serializers import AmenitySerializer, RoomListSerializer, RoomDetailSerializer
-
+from reviews.serializers import ReviewSerializer
 
 class Amenities(APIView):
     def get(self, request):
@@ -185,13 +185,24 @@ class RoomDetail(APIView):
         return Response(status=status.HTTP_200_OK)
 
 
-# {
-# "name": "Beautiful room for you",
-# "price": 3000,
-# "rooms_count": 3,
-# "toilets": 3,
-# "description": "Awesome Fucking Good",
-# "address": "Chyonee house",
-# "category": 1,
-# "kind": "entire_place"
-# }
+class RoomReviews(APIView):
+
+    def get_object(self, pk):
+        try:
+            return Room.objects.get(pk=pk)
+        except Room.DoesNotExist:
+            raise NotFound
+
+    def get(self, request, pk):
+        try:
+            page = request.query_params.get("page", 1)
+            page = int(page)
+        except ValueError:
+            page = 1
+            
+        page_size = 3
+        offset = (page - 1) * page_size
+        limit = page * page_size
+        room = self.get_object(pk)
+        serializer = ReviewSerializer(instance=room.reviews.all()[offset:limit], many=True)
+        return Response(status=status.HTTP_200_OK, data=serializer.data)
