@@ -127,6 +127,63 @@ class RoomDetail(APIView):
         serializer = RoomDetailSerializer(instance=room)
         return Response(status=status.HTTP_200_OK, data=serializer.data)
 
+    def put(self, request, pk):
+        room = self.get_object(pk)
+
+        if not request.user.is_authenticated:
+            return Response(
+                status=status.HTTP_401_UNAUTHORIZED,
+                data={"error": "This user is not authenticated"},
+            )
+
+        if request.user != room.owner:
+            return Response(
+                status=status.HTTP_403_FORBIDDEN,
+                data={"error": "You are not owner for this room"},
+            )
+
+        serializer = RoomDetailSerializer(
+            instance=room, data=request.data, partial=True
+        )
+
+        if serializer.is_valid():
+            try:
+                with transaction.atomic():
+                    updated_room = serializer.save()
+                    category_pk = request.data.get("category")
+                    amenities = request.data.get("amenities")
+                    if category_pk:
+                        category = Category.objects.get(pk=category_pk)
+                        updated_room.category = category
+                        updated_room.save()
+                    if amenities:
+                        for amenity_pk in amenities:
+                            amenity = Amenity.objects.get(pk=amenity_pk)
+                            updated_room.amenities.add(amenity)
+                    return Response(status=status.HTTP_200_OK, data=RoomDetailSerializer(updated_room).data)
+            except Exception as e:
+                return Response(
+                    status=status.HTTP_400_BAD_REQUEST, data={"error": str(e)}
+                )
+
+    def delete(self, request, pk):
+        room = self.get_object(pk)
+
+        if not request.user.is_authenticated:
+            return Response(
+                status=status.HTTP_401_UNAUTHORIZED,
+                data={"error": "This user is not authenticated"},
+            )
+
+        if request.user != room.owner:
+            return Response(
+                status=status.HTTP_403_FORBIDDEN,
+                data={"error": "You are not owner for this room"},
+            )
+
+        room.delete()
+        return Response(status=status.HTTP_200_OK)
+
 
 # {
 # "name": "Beautiful room for you",
