@@ -201,4 +201,6 @@ poetry add djangorestframework
 
 #### #36 Review Serializer
 
-#### #37 Review pagenation
+#### #37 Review pagination
+
+#### #38 Amenity pagination

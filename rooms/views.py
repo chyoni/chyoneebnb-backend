@@ -199,10 +199,33 @@ class RoomReviews(APIView):
             page = int(page)
         except ValueError:
             page = 1
-            
+
         page_size = 3
         offset = (page - 1) * page_size
         limit = page * page_size
         room = self.get_object(pk)
         serializer = ReviewSerializer(instance=room.reviews.all()[offset:limit], many=True)
+        return Response(status=status.HTTP_200_OK, data=serializer.data)
+
+
+class AmenityReviews(APIView):
+
+    def get_object(self, pk):
+        try:
+            return Room.objects.get(pk=pk)
+        except:
+            raise NotFound
+
+    def get(self, request, pk):
+        room = self.get_object(pk)
+        try:
+            page = request.query_params.get("page", 1)
+            page = int(page)
+        except ValueError:
+            page = 1
+        
+        page_size = 5
+        offset = (page - 1) * page_size
+        limit = page * page_size
+        serializer = AmenitySerializer(room.amenities.all()[offset:limit], many=True)
         return Response(status=status.HTTP_200_OK, data=serializer.data)
