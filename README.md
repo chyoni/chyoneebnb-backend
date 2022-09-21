@@ -198,3 +198,5 @@ poetry add djangorestframework
 #### #34 Room update method
 
 #### #35 Custom Serializer Field (SerializerMethodField)
+
+#### #36 Review Serializer
