@@ -188,3 +188,5 @@ poetry add djangorestframework
   모델안에 있는거면 알아서 create method를 호출할 때 집어넣어준다 ModelSerializer는 create, update method를 이미 구현해놓은 Serializer이기 때문에
 
 #### #31 Create room with relationship fields
+
+#### #32 ManyToMany Field added way

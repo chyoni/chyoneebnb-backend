@@ -88,6 +88,24 @@ class Rooms(APIView):
                         data={"error": "category you given does not exist"},
                     )
                 new_room = serializer.save(owner=request.user, category=category)
+                amenities = request.data.get("amenities")
+                if not amenities:
+                    return Response(
+                        status=status.HTTP_400_BAD_REQUEST,
+                        data={"error": "Amenities data is empty"},
+                    )
+                for amenity in amenities:
+                    try:
+                        ame = Amenity.objects.get(pk=amenity)
+                        new_room.amenities.add(ame)
+                    except Amenity.DoesNotExist:
+                        new_room.delete()
+                        return Response(
+                            status=status.HTTP_400_BAD_REQUEST,
+                            data={
+                                "error": f"That amenity with id: {amenity} does not found"
+                            },
+                        )
                 serializer = RoomDetailSerializer(new_room)
                 return Response(status=status.HTTP_201_CREATED, data=serializer.data)
             else:

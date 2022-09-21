@@ -61,4 +61,4 @@ class RoomAdmin(admin.ModelAdmin):
 @admin.register(Amenity)
 class AmenityAdmin(admin.ModelAdmin):
 
-    list_display = ("name", "description", "created_at", "updated_at")
+    list_display = ("id", "name", "description", "created_at", "updated_at")
