@@ -1,7 +1,8 @@
+from django.db import transaction
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.exceptions import NotFound, NotAuthenticated
+from rest_framework.exceptions import NotFound, NotAuthenticated, ParseError
 from .models import Amenity, Room
 from categories.models import Category
 from .serializers import AmenitySerializer, RoomListSerializer, RoomDetailSerializer
@@ -87,25 +88,23 @@ class Rooms(APIView):
                         status=status.HTTP_400_BAD_REQUEST,
                         data={"error": "category you given does not exist"},
                     )
-                new_room = serializer.save(owner=request.user, category=category)
-                amenities = request.data.get("amenities")
-                if not amenities:
+                try:
+                    with transaction.atomic():
+                        new_room = serializer.save(
+                            owner=request.user, category=category
+                        )
+                        amenities = request.data.get("amenities")
+                        for amenity in amenities:
+                            ame = Amenity.objects.get(pk=amenity)
+                            new_room.amenities.add(ame)
+                except Amenity.DoesNotExist:
                     return Response(
                         status=status.HTTP_400_BAD_REQUEST,
-                        data={"error": "Amenities data is empty"},
+                        data={"error": "That amenity you given does not found"},
                     )
-                for amenity in amenities:
-                    try:
-                        ame = Amenity.objects.get(pk=amenity)
-                        new_room.amenities.add(ame)
-                    except Amenity.DoesNotExist:
-                        new_room.delete()
-                        return Response(
-                            status=status.HTTP_400_BAD_REQUEST,
-                            data={
-                                "error": f"That amenity with id: {amenity} does not found"
-                            },
-                        )
+                except Exception as e:
+                    return Response(status=status.HTTP_400_BAD_REQUEST, data=str(e))
+
                 serializer = RoomDetailSerializer(new_room)
                 return Response(status=status.HTTP_201_CREATED, data=serializer.data)
             else:

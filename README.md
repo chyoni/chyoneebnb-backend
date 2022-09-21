@@ -190,3 +190,7 @@ poetry add djangorestframework
 #### #31 Create room with relationship fields
 
 #### #32 ManyToMany Field added way
+
+#### #33 Django transaction atomic
+
+- atomic은 DB에 transaction이 이루어질 때 코드상에 아무런 문제도 없어야만 transaction이 일어나는 그런 좋은 아이이다.
