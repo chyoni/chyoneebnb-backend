@@ -218,3 +218,5 @@ poetry add djangorestframework
 #### #44 isLiked attributes
 
 #### #45 Create booking 1
+
+#### #46 Create booking 2 (Validation)
