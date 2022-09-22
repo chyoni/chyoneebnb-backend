@@ -204,3 +204,5 @@ poetry add djangorestframework
 #### #37 Review pagination
 
 #### #38 Amenity pagination
+
+#### #39 File upload settings (Photo)

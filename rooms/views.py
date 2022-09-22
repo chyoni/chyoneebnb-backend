@@ -208,7 +208,7 @@ class RoomReviews(APIView):
         return Response(status=status.HTTP_200_OK, data=serializer.data)
 
 
-class AmenityReviews(APIView):
+class RoomAmenities(APIView):
 
     def get_object(self, pk):
         try:
@@ -229,3 +229,9 @@ class AmenityReviews(APIView):
         limit = page * page_size
         serializer = AmenitySerializer(room.amenities.all()[offset:limit], many=True)
         return Response(status=status.HTTP_200_OK, data=serializer.data)
+
+
+class RoomPhotos(APIView):
+
+    def post(self, request, pk):
+        pass

@@ -142,3 +142,9 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # Auth user
 
 AUTH_USER_MODEL = "users.User"
+
+# 이건 내가 사진을 올릴 때 내 로컬 프로젝트 경로의 폴더명
+MEDIA_ROOT = "uploads"
+
+# 이건 올라간 사진의 URL --> 127.0.0.1:8000/user-uploads/blah blah
+MEDIA_URL = "user-uploads/"
