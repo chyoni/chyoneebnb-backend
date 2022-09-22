@@ -20,7 +20,7 @@ class PhotoDetail(APIView):
         
         photo = self.get_object(pk)
 
-        if (photo.room and photo.room.owner != request.user) or (photo.experiences and photo.experiences.host != request.user):
+        if (photo.room and photo.room.owner != request.user) or (photo.experience and photo.experience.host != request.user):
             raise PermissionDenied
         photo.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
