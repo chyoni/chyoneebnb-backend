@@ -220,3 +220,5 @@ poetry add djangorestframework
 #### #45 Create booking 1
 
 #### #46 Create booking 2 (Validation)
+
+#### #47 Create booking DONE
