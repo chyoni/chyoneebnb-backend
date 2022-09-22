@@ -216,3 +216,5 @@ poetry add djangorestframework
 #### #43 Wishlist toggle room
 
 #### #44 isLiked attributes
+
+#### #45 Create booking 1

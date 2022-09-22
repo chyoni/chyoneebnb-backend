@@ -1,4 +1,5 @@
 from django.db import transaction
+from django.utils import timezone
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
@@ -9,6 +10,8 @@ from categories.models import Category
 from .serializers import AmenitySerializer, RoomListSerializer, RoomDetailSerializer
 from reviews.serializers import ReviewSerializer
 from medias.serializers import PhotoSerializer
+from bookings.serializers import PublicBookingSerializer, CreateRoomBookingSerializer
+from bookings.models import Booking
 
 class Amenities(APIView):
     def get(self, request):
@@ -258,5 +261,31 @@ class RoomPhotos(APIView):
         if serializer.is_valid():
             photo = serializer.save(room=room)
             return Response(status=status.HTTP_201_CREATED, data=PhotoSerializer(instance=photo).data)
+        else:
+            return Response(status=status.HTTP_400_BAD_REQUEST, data=serializer.errors)
+
+
+class RoomBookings(APIView):
+
+    def get_object(self, pk):
+        try:
+            return Room.objects.get(pk=pk)
+        except Room.DoesNotExist:
+            raise NotFound
+
+    def get(self, request, pk):
+        room = self.get_object(pk)
+        
+        now = timezone.localtime(timezone.now()).date()
+        
+        bookings = Booking.objects.filter(room=room, check_in__gt=now)
+        serializer = PublicBookingSerializer(instance=bookings, many=True)
+        return Response(status=status.HTTP_200_OK, data=serializer.data)
+
+    def post(self, request, pk):
+        room = self.get_object(pk)
+        serializer = CreateRoomBookingSerializer(data=request.data)
+        if serializer.is_valid():
+            pass
         else:
             return Response(status=status.HTTP_400_BAD_REQUEST, data=serializer.errors)
