@@ -210,3 +210,7 @@ poetry add djangorestframework
 #### #40 File field change to URLField
 
 #### #41 IsAuthenticatedOrReadOnly permission / Photo delete
+
+#### #42 RoomReview create
+
+#### #43 Wishlist toggle room
