@@ -206,3 +206,5 @@ poetry add djangorestframework
 #### #38 Amenity pagination
 
 #### #39 File upload settings (Photo)
+
+#### #40 File field change to URLField
