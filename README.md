@@ -208,3 +208,5 @@ poetry add djangorestframework
 #### #39 File upload settings (Photo)
 
 #### #40 File field change to URLField
+
+#### #41 IsAuthenticatedOrReadOnly permission / Photo delete

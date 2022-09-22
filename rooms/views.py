@@ -2,7 +2,8 @@ from django.db import transaction
 from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework import status
-from rest_framework.exceptions import NotFound, NotAuthenticated, ParseError
+from rest_framework.exceptions import NotFound, NotAuthenticated
+from rest_framework.permissions import IsAuthenticatedOrReadOnly
 from .models import Amenity, Room
 from categories.models import Category
 from .serializers import AmenitySerializer, RoomListSerializer, RoomDetailSerializer
@@ -60,63 +61,67 @@ class AmenityDetail(APIView):
 
 
 class Rooms(APIView):
+
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
     def get(self, request):
         all_rooms = Room.objects.all()
         serializer = RoomListSerializer(instance=all_rooms, many=True, context={'request': request})
         return Response(status=status.HTTP_200_OK, data=serializer.data)
 
     def post(self, request):
-        if request.user.is_authenticated:
-            serializer = RoomDetailSerializer(data=request.data)
-            if serializer.is_valid():
-                category_pk = request.data.get("category")
-                if category_pk is None:
-                    return Response(
-                        status=status.HTTP_400_BAD_REQUEST,
-                        data={"error": "Category field is required"},
-                    )
-                try:
-                    category = Category.objects.get(pk=category_pk)
-                    if category.kind == Category.CategoryKindChoices.EXPERIENCES:
-                        return Response(
-                            status=status.HTTP_400_BAD_REQUEST,
-                            data={
-                                "error": "This category is only valid for experiences kind"
-                            },
-                        )
-                except Category.DoesNotExist:
-                    return Response(
-                        status=status.HTTP_400_BAD_REQUEST,
-                        data={"error": "category you given does not exist"},
-                    )
-                try:
-                    with transaction.atomic():
-                        new_room = serializer.save(
-                            owner=request.user, category=category
-                        )
-                        amenities = request.data.get("amenities")
-                        for amenity in amenities:
-                            ame = Amenity.objects.get(pk=amenity)
-                            new_room.amenities.add(ame)
-                except Amenity.DoesNotExist:
-                    return Response(
-                        status=status.HTTP_400_BAD_REQUEST,
-                        data={"error": "That amenity you given does not found"},
-                    )
-                except Exception as e:
-                    return Response(status=status.HTTP_400_BAD_REQUEST, data=str(e))
-
-                serializer = RoomDetailSerializer(new_room)
-                return Response(status=status.HTTP_201_CREATED, data=serializer.data)
-            else:
+        
+        serializer = RoomDetailSerializer(data=request.data)
+        if serializer.is_valid():
+            category_pk = request.data.get("category")
+            if category_pk is None:
                 return Response(
-                    status=status.HTTP_400_BAD_REQUEST, data=serializer.errors
+                    status=status.HTTP_400_BAD_REQUEST,
+                    data={"error": "Category field is required"},
                 )
+            try:
+                category = Category.objects.get(pk=category_pk)
+                if category.kind == Category.CategoryKindChoices.EXPERIENCES:
+                    return Response(
+                        status=status.HTTP_400_BAD_REQUEST,
+                        data={
+                            "error": "This category is only valid for experiences kind"
+                        },
+                    )
+            except Category.DoesNotExist:
+                return Response(
+                    status=status.HTTP_400_BAD_REQUEST,
+                    data={"error": "category you given does not exist"},
+                )
+            try:
+                with transaction.atomic():
+                    new_room = serializer.save(
+                        owner=request.user, category=category
+                    )
+                    amenities = request.data.get("amenities")
+                    for amenity in amenities:
+                        ame = Amenity.objects.get(pk=amenity)
+                        new_room.amenities.add(ame)
+            except Amenity.DoesNotExist:
+                return Response(
+                    status=status.HTTP_400_BAD_REQUEST,
+                    data={"error": "That amenity you given does not found"},
+                )
+            except Exception as e:
+                return Response(status=status.HTTP_400_BAD_REQUEST, data=str(e))
+
+            serializer = RoomDetailSerializer(new_room)
+            return Response(status=status.HTTP_201_CREATED, data=serializer.data)
         else:
-            raise NotAuthenticated
+            return Response(
+                status=status.HTTP_400_BAD_REQUEST, data=serializer.errors
+            )
 
 
 class RoomDetail(APIView):
+
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
     def get_object(self, pk):
         try:
             return Room.objects.get(pk=pk)
@@ -130,12 +135,6 @@ class RoomDetail(APIView):
 
     def put(self, request, pk):
         room = self.get_object(pk)
-
-        if not request.user.is_authenticated:
-            return Response(
-                status=status.HTTP_401_UNAUTHORIZED,
-                data={"error": "This user is not authenticated"},
-            )
 
         if request.user != room.owner:
             return Response(
@@ -169,12 +168,6 @@ class RoomDetail(APIView):
 
     def delete(self, request, pk):
         room = self.get_object(pk)
-
-        if not request.user.is_authenticated:
-            return Response(
-                status=status.HTTP_401_UNAUTHORIZED,
-                data={"error": "This user is not authenticated"},
-            )
 
         if request.user != room.owner:
             return Response(
@@ -234,6 +227,8 @@ class RoomAmenities(APIView):
 
 class RoomPhotos(APIView):
 
+    permission_classes = [IsAuthenticatedOrReadOnly]
+
     def get_object(self, pk):
         try:
             return Room.objects.get(pk=pk)
@@ -243,8 +238,6 @@ class RoomPhotos(APIView):
     def post(self, request, pk):
         room = self.get_object(pk)
         
-        if not request.user.is_authenticated:
-            return Response(status=status.HTTP_401_UNAUTHORIZED, data={"error": "Unauthorized"})
         if request.user != room.owner:
             return Response(status=status.HTTP_403_FORBIDDEN, data={"error": "You are not permission this operation"})
 
